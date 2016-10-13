@@ -1,0 +1,22 @@
+<!--
+  ~ Copyright (c) 2016 Andrew Chow
+  ~
+  ~ This software may be modified and distributed under the terms
+  ~ of the MIT License. See the LICENSE file for details.
+  -->
+
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.7.0//EN"
+        "http://gwtproject.org/doctype/2.7.0/gwt-module.dtd">
+<module rename-to="bittipaddr">
+
+    <!-- Inherit the core Web Toolkit stuff.                  -->
+    <inherits name='com.google.gwt.user.User'/>
+
+    <!-- Specify the app entry point class.                   -->
+    <entry-point class='com.achow101.bittipaddr.client.bittipaddr'/>
+
+
+    <!-- Specify the app servlets.                   -->
+    <servlet path='/bittipaddrService' class='com.achow101.bittipaddr.server.bittipaddrServiceImpl'/>
+
+</module>

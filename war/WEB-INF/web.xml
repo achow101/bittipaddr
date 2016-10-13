@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2016 Andrew Chow
+  ~
+  ~ This software may be modified and distributed under the terms
+  ~ of the MIT License. See the LICENSE file for details.
+  -->
+
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+    <servlet>
+        <servlet-name>com.achow101.bittipaddr.bittipaddr bittipaddrService</servlet-name>
+        <servlet-class>com.achow101.bittipaddr.server.bittipaddrServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>com.achow101.bittipaddr.bittipaddr bittipaddrService</servlet-name>
+        <url-pattern>/bittipaddr/bittipaddrService</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>com.achow101.bittipaddr.bittipaddr addressService</servlet-name>
+        <servlet-class>com.achow101.bittipaddr.server.addressServiceImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>com.achow101.bittipaddr.bittipaddr addressService</servlet-name>
+        <url-pattern>/bittipaddr/addressfor/*</url-pattern>
+    </servlet-mapping>
+</web-app>
