@@ -31,6 +31,11 @@ public class bittipaddrServiceImpl extends RemoteServiceServlet implements bitti
 
     public String addAddresses(AddrReq req) {
 
+        // Setup the aws dynamo db client
+        AmazonDynamoDBClient client = new AmazonDynamoDBClient();
+        DynamoDB dynamoDB = new DynamoDB(client);
+        Table table = dynamoDB.getTable("Bittipaddrs");
+
         // Check validity of addresses
         if(req.getXpub().equals("NONE") && req.getAddresses().length != 0)
         {
@@ -65,15 +70,16 @@ public class bittipaddrServiceImpl extends RemoteServiceServlet implements bitti
         }
         // It's a unit, return data
         else if(req.getXpub().equals("NONE") && req.getAddresses().length == 0) {
-            // TODO: Get data from DynamoDB for this
+            try {
+                Item item = table.getItem("ID", req.getId());
+                return req.getHtml();
+            }
+            catch(Exception e) {
+                return "<p style=\"color:red;\">An Error Occurred!</p>";
+            }
         }
 
-        // Setup the aws dynamo db client
-        AmazonDynamoDBClient client = new AmazonDynamoDBClient();
-        DynamoDB dynamoDB = new DynamoDB(client);
-
         // Add request to DynamoDB
-        Table table = dynamoDB.getTable("Bittipaddrs");
         Item item = new Item().withPrimaryKey("ID", req.getId())
                 .withInt("AddrIndex", 0)
                 .withList("Addresses", Arrays.asList(req.getAddresses()))
