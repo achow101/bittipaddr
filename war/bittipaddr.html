@@ -11,7 +11,7 @@
     <!--                                           -->
     <!-- Any title is fine                         -->
     <!--                                           -->
-    <title>Wrapper HTML for App</title>
+    <title>Bitcoin Tipping Address</title>
 
     <link type="text/css" rel="stylesheet" href="bittipaddr.css">
 
@@ -28,19 +28,38 @@
 <!--                                           -->
 <body>
 
-<h1>Sample Application</h1>
+<h1>Automatically changing Bitcoin tipping addresses</h1>
 
 <p>
-    This is an example of a host page for the App application.
-    You can attach a Web Toolkit module to any HTML page you like,
-    making it easy to add bits of AJAX functionality to existing pages
-    without starting from scratch.
+    Enter your Bitcoin addresses or BIP 32 Extended Public Key. You will receive code that you can add to any
+    webpage, forum post, or Reddit post. This code will return you an address with no balance that you entered
+    or a newly derived address from the xpub. This allows you to accept donations without worrying about address reuse.
 </p>
 
 <table align="center">
     <tr>
-        <td id="slot1"></td>
-        <td id="slot2"></td>
+        <td>Lookup an existing unit: </td>
+        <td id="unitLookup"></td>
+    </tr>
+    <tr>
+        <td>--OR--</td>
+    </tr>
+    <tr>
+        <td>Enter a BIP 32 XPUB: </td>
+        <td id="enterxpub"></td>
+    </tr>
+    <tr>
+        <td>--OR--</td>
+    </tr>
+    <tr>
+        <td>Enter a list of addresses (up to 1000): </td>
+        <td id="enterAddrList"></td>
+    </tr>
+    <tr>
+        <td id="submitBtn"></td>
+    </tr>
+    <tr>
+        <td id="completedReqOutput"></td>
     </tr>
 </table>
 </body>

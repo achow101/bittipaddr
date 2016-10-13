@@ -7,6 +7,7 @@
 
 package com.achow101.bittipaddr.client;
 
+import com.achow101.bittipaddr.shared.AddrReq;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -14,7 +15,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("bittipaddrService")
 public interface bittipaddrService extends RemoteService {
     // Sample interface method of remote interface
-    String getMessage(String msg);
+    AddrReq addAddresses(AddrReq req);
 
     /**
      * Utility/Convenience class.

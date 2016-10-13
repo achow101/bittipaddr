@@ -19,4 +19,8 @@
     <!-- Specify the app servlets.                   -->
     <servlet path='/bittipaddrService' class='com.achow101.bittipaddr.server.bittipaddrServiceImpl'/>
 
+    <!-- Specify the paths for translatable code                    -->
+    <source path='client'/>
+    <source path='shared'/>
+
 </module>

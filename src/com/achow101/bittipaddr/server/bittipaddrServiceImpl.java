@@ -7,12 +7,13 @@
 
 package com.achow101.bittipaddr.server;
 
+import com.achow101.bittipaddr.shared.AddrReq;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.achow101.bittipaddr.client.bittipaddrService;
 
 public class bittipaddrServiceImpl extends RemoteServiceServlet implements bittipaddrService {
     // Implementation of sample interface method
-    public String getMessage(String msg) {
-        return "Client said: \"" + msg + "\"<br>Server answered: \"Hi!\"";
+    public AddrReq addAddresses(AddrReq req) {
+        return null;
     }
 }

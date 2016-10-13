@@ -7,8 +7,9 @@
 
 package com.achow101.bittipaddr.client;
 
+import com.achow101.bittipaddr.shared.AddrReq;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface bittipaddrServiceAsync {
-    void getMessage(String msg, AsyncCallback<String> async);
+    void addAddresses(AddrReq req, AsyncCallback<AddrReq> async);
 }
