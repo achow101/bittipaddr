@@ -44,7 +44,7 @@ public class bittipaddr implements EntryPoint {
                 String xpub = xpubBox.getText();
                 String unit = unitLookupBox.getText();
                 String[] addrs = addrsArea.getText().split("\n");
-                if(!xpub.isEmpty() && addrs.length != 0)
+                if(!xpub.isEmpty() && !addrs[0].isEmpty())
                 {
                     output.setHTML("<p style=\"color:red;\">Cannot set both xpub and a list of addresses</p>");
                     return;

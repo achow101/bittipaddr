@@ -55,12 +55,13 @@ public class bittipaddrServiceImpl extends RemoteServiceServlet implements bitti
             try {
                 // Check Xpub
                 DeterministicKey xpub = DeterministicKey.deserializeB58(req.getXpub(), params);
+                DeterministicKey external = HDKeyDerivation.deriveChildKey(xpub, 0);
 
                 // Derive 1000 addresses and add to req
                 String[] addrs = new String[1000];
                 for(int i = 0; i < 1000; i++)
                 {
-                    addrs[i] = HDKeyDerivation.deriveChildKey(xpub, i).serializePubB58(params);
+                    addrs[i] = HDKeyDerivation.deriveChildKey(external, i).toAddress(params).toBase58();
                 }
                 req.setAddresses(addrs);
             }

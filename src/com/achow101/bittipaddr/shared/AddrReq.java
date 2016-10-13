@@ -18,6 +18,7 @@ public class AddrReq implements IsSerializable {
     public AddrReq(String xpub) {
         this.xpub = xpub;
         this.id = new BigInteger(40, random).toString(32);
+        this.addresses = new String[0];
     }
 
     public AddrReq(String[] addresses) {
@@ -53,16 +54,17 @@ public class AddrReq implements IsSerializable {
 
     public String getHtml() {
         // TODO: Fix HTML
-        String out = "<ul><li>Your Unit ID is <b>" + this.id + "</b></li>\n" +
-                "\n<li></li><li>Embed this into your website: " +
-                "<code><iframe src=\"http://localhost:8888/bittipaddr/addressfor/" + this.id + "\" style=\"border:none;\" scrolling=\"no\"></iframe></code></li>\n" +
-                "\n<li></li><li>Use this for BBCode (Forums): STUFF</li>\n" +
-                "\n<li></li><li>Use this for Markdown (Reddit, Github): STUFF</li>\n" +
-                "\n<li></li><li>Here are all of the addresses that will be used:</li>\n";
+        String out = "<table><tr></tr><tr><td>Your Unit ID is <b>" + this.id + "</b></td></tr>\n" +
+                "\n<tr></tr><tr><td>Embed this into your website: " +
+                "<code><iframe src=\"http://localhost:8888/bittipaddr/addressfor/" + this.id + "\" style=\"border:none;\" scrolling=\"no\"></iframe></code></td></tr>\n" +
+                "\n<tr><td>Use this for BBCode (Forums): STUFF</td></tr>\n" +
+                "\n<tr><td>Use this for Markdown (Reddit, Github): STUFF</td></tr>\n" +
+                "\n<tr><td>Here are all of the addresses that will be used:</td></tr>\n";
         for(int i = 0; i < addresses.length; i++)
         {
-            out += "<li>" + addresses[i] + "</li>\n";
+            out += "<tr><td>" + addresses[i] + "</td></tr>\n";
         }
+        out += "</table>";
         return out;
     }
 
