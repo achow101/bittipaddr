@@ -39,7 +39,33 @@ public class bittipaddr implements EntryPoint {
 
         submitBtn.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
-                    bittipaddrService.App.getInstance().addAddresses(new AddrReq("asdf"), new AddAddrAsyncCallback(output));
+
+                // Get entered data and some prelim checking
+                String xpub = xpubBox.getText();
+                String unit = unitLookupBox.getText();
+                String[] addrs = addrsArea.getText().split("\n");
+                if(!xpub.isEmpty() && addrs.length != 0)
+                {
+                    output.setHTML("<p style=\"color:red;\">Cannot set both xpub and a list of addresses</p>");
+                    return;
+                }
+
+                // Send to server
+                AddrReq req;
+                if(!xpub.isEmpty())
+                {
+                    req = new AddrReq(xpub);
+                }
+                else if(addrs.length != 0)
+                {
+                    req = new AddrReq(addrs);
+                }
+                else
+                {
+                    req = new AddrReq();
+                    req.setId(unit);
+                }
+                bittipaddrService.App.getInstance().addAddresses(req, new AddAddrAsyncCallback(output));
             }
         });
 
@@ -51,19 +77,19 @@ public class bittipaddr implements EntryPoint {
         RootPanel.get("completedReqOutput").add(output);
     }
 
-    private static class AddAddrAsyncCallback implements AsyncCallback<AddrReq> {
+    private static class AddAddrAsyncCallback implements AsyncCallback<String> {
         private HTML outhtml;
 
         public AddAddrAsyncCallback(HTML outhtml) {
             this.outhtml = outhtml;
         }
 
-        public void onSuccess(AddrReq result) {
-            outhtml.setHTML(result.getHtml());
+        public void onSuccess(String result) {
+            outhtml.setHTML(result);
         }
 
         public void onFailure(Throwable throwable) {
-            outhtml.setText("<p style=\"color:red;\">Failed to receive answer from server!</p>");
+            outhtml.setHTML("<p style=\"color:red;\">Failed to receive answer from server!</p>");
         }
     }
 }

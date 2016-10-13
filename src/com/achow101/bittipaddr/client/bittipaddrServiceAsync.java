@@ -11,5 +11,5 @@ import com.achow101.bittipaddr.shared.AddrReq;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface bittipaddrServiceAsync {
-    void addAddresses(AddrReq req, AsyncCallback<AddrReq> async);
+    void addAddresses(AddrReq req, AsyncCallback<String> async);
 }

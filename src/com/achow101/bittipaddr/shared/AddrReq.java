@@ -27,6 +27,7 @@ public class AddrReq implements IsSerializable {
     }
 
     public AddrReq() {
+        this(new String[0]);
     }
 
     public String getXpub() {
@@ -37,11 +38,21 @@ public class AddrReq implements IsSerializable {
         return this.addresses;
     }
 
+    public void setAddresses(String[] addresses)
+    {
+        this.addresses = addresses;
+    }
+
     public String getId() {
         return this.id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getHtml() {
+        // TODO: Implement this!!
         return null;
     }
 

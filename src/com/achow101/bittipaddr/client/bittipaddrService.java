@@ -15,7 +15,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("bittipaddrService")
 public interface bittipaddrService extends RemoteService {
     // Sample interface method of remote interface
-    AddrReq addAddresses(AddrReq req);
+    String addAddresses(AddrReq req);
 
     /**
      * Utility/Convenience class.
