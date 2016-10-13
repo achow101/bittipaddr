@@ -55,10 +55,10 @@ public class AddrReq implements IsSerializable {
     public String getHtml() {
         // TODO: Fix HTML
         String out = "<table><tr></tr><tr><td>Your Unit ID is <b>" + this.id + "</b></td></tr>\n" +
-                "\n<tr></tr><tr><td>Embed this into your website: " +
-                "<code><iframe src=\"http://localhost:8888/bittipaddr/addressfor/" + this.id + "\" style=\"border:none;\" scrolling=\"no\"></iframe></code></td></tr>\n" +
-                "\n<tr><td>Use this for BBCode (Forums): STUFF</td></tr>\n" +
-                "\n<tr><td>Use this for Markdown (Reddit, Github): STUFF</td></tr>\n" +
+                "\n<tr></tr><tr><td>Embed this into your website: </td><td>" +
+                "<code>&lt;iframe src=\"http://localhost:8888/bittipaddr/addressfor/" + this.id + "\" style=\"border:none;\" scrolling=\"no\"&gt;&lt;/iframe&gt;</code></td></tr>\n" +
+                "\n<tr><td>Use this for BBCode (Forums): </td><td>STUFF</td></tr>\n" +
+                "\n<tr><td>Use this for Markdown (Reddit, Github): </td><td>STUFF</td></tr>\n" +
                 "\n<tr><td>Here are all of the addresses that will be used:</td></tr>\n";
         for(int i = 0; i < addresses.length; i++)
         {

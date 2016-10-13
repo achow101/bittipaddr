@@ -27,9 +27,10 @@ public class bittipaddr implements EntryPoint {
         // Add textboxes
         TextBox unitLookupBox = new TextBox();
         TextBox xpubBox = new TextBox();
+        xpubBox.setWidth("600");
         TextArea addrsArea = new TextArea();
-        addrsArea.setWidth("600");
-        addrsArea.setHeight("600");
+        addrsArea.setWidth("300");
+        addrsArea.setHeight("300");
 
         // Add text elements
         HTML output = new HTML();
