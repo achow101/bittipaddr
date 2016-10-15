@@ -18,6 +18,7 @@ import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.document.spec.GetItemSpec;
 import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
+import com.blockcypher.context.BlockCypherContext;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 import javax.servlet.ServletException;
@@ -46,6 +47,9 @@ public class addressServiceImpl extends HttpServlet {
         AmazonDynamoDBClient client = new AmazonDynamoDBClient();
         DynamoDB dynamoDB = new DynamoDB(client);
 
+        // Setup blockcypher API
+        BlockCypherContext blockCypherContext = new BlockCypherContext("v1", "btc", "main", "4d3109a5c07f426da9ccc2943da39244");
+
         // Lookup ID and get current address, increment index
         String address = "";
         Table table = dynamoDB.getTable("Bittipaddrs");
@@ -55,17 +59,21 @@ public class addressServiceImpl extends HttpServlet {
             List<String> addresses = item.getList("Addresses");
             if(currAddrInx < addresses.size()) {
                 address = addresses.get(currAddrInx);
-                currAddrInx++;
 
-                // Update index in DB
-                UpdateItemSpec updateItemSpec = new UpdateItemSpec()
-                        .withPrimaryKey("ID", id)
-                        .withUpdateExpression("set AddrIndex=:i")
-                        .withValueMap(new ValueMap()
-                                .withNumber(":i", currAddrInx));
-                table.updateItem(updateItemSpec);
+                while(blockCypherContext.getAddressService().getAddress(address).getnTx() > 0)
+                {
+                    // Increment index and get next address
+                    currAddrInx++;
+                    address = addresses.get(currAddrInx);
 
-                // TODO: Check with blockcypher that it isn't used. Do in a Do-While loop
+                    // Update index in DB
+                    UpdateItemSpec updateItemSpec = new UpdateItemSpec()
+                            .withPrimaryKey("ID", id)
+                            .withUpdateExpression("set AddrIndex=:i")
+                            .withValueMap(new ValueMap()
+                                    .withNumber(":i", currAddrInx));
+                    table.updateItem(updateItemSpec);
+                }
             }
             else {
                 address = addresses.get(addresses.size() - 1);
