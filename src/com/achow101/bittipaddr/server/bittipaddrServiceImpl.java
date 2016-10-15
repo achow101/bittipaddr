@@ -23,11 +23,14 @@ import org.bitcoinj.crypto.HDKeyDerivation;
 import org.bitcoinj.params.MainNetParams;
 import org.bitcoinj.wallet.UnreadableWalletException;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Arrays;
 
 public class bittipaddrServiceImpl extends RemoteServiceServlet implements bittipaddrService {
 
     private NetworkParameters params = MainNetParams.get();
+    private SecureRandom random = new SecureRandom();
 
     public String addAddresses(AddrReq req) {
 
@@ -36,8 +39,24 @@ public class bittipaddrServiceImpl extends RemoteServiceServlet implements bitti
         DynamoDB dynamoDB = new DynamoDB(client);
         Table table = dynamoDB.getTable("Bittipaddrs");
 
+        // Check that the request is for editing an existing one
+        if(!req.getId().equals("NEW"))
+        {
+            try {
+                Item item = table.getItem("ID", req.getId());
+                String[] addresses = new String[item.getList("Addresses").size()];
+                item.getList("Addresses").toArray(addresses);
+                req.setAddresses(addresses);
+                req.setXpub(item.getString("bip32-xpub"));
+                return req.getHtml();
+            }
+            catch(Exception e) {
+                return "<p style=\"color:red;\">Could not find unit</p>";
+            }
+
+        }
         // Check validity of addresses
-        if(req.getXpub().equals("NONE") && req.getAddresses().length != 0)
+        else if(req.getXpub().equals("NONE") && req.getAddresses().length != 0)
         {
             for(int i = 0; i < req.getAddresses().length; i++)
             {
@@ -69,16 +88,9 @@ public class bittipaddrServiceImpl extends RemoteServiceServlet implements bitti
                 return "<p style=\"color:red;\">Invalid xpub" + req.getXpub() + "</p>";
             }
         }
-        // It's a unit, return data
-        else if(req.getXpub().equals("NONE") && req.getAddresses().length == 0) {
-            try {
-                Item item = table.getItem("ID", req.getId());
-                return req.getHtml();
-            }
-            catch(Exception e) {
-                return "<p style=\"color:red;\">An Error Occurred!</p>";
-            }
-        }
+
+        // Set the request ID
+        req.setId(new BigInteger(40, random).toString(32));
 
         // Add request to DynamoDB
         Item item = new Item().withPrimaryKey("ID", req.getId())

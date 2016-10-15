@@ -56,27 +56,30 @@ public class addressServiceImpl extends HttpServlet {
         try {
             Item item = table.getItem("ID", id);
             int currAddrInx = item.getInt("AddrIndex");
+            int origIndx = currAddrInx;
             List<String> addresses = item.getList("Addresses");
             if(currAddrInx < addresses.size()) {
                 address = addresses.get(currAddrInx);
 
-                while(blockCypherContext.getAddressService().getAddress(address).getnTx() > 0)
-                {
+                while(blockCypherContext.getAddressService().getAddress(address).getnTx() > 0) {
                     // Increment index and get next address
                     currAddrInx++;
                     address = addresses.get(currAddrInx);
-
-                    // Update index in DB
-                    UpdateItemSpec updateItemSpec = new UpdateItemSpec()
-                            .withPrimaryKey("ID", id)
-                            .withUpdateExpression("set AddrIndex=:i")
-                            .withValueMap(new ValueMap()
-                                    .withNumber(":i", currAddrInx));
-                    table.updateItem(updateItemSpec);
                 }
             }
             else {
                 address = addresses.get(addresses.size() - 1);
+            }
+
+            // Update index if DB if it has changed
+            if(currAddrInx != origIndx)
+            {
+                UpdateItemSpec updateItemSpec = new UpdateItemSpec()
+                        .withPrimaryKey("ID", id)
+                        .withUpdateExpression("set AddrIndex=:i")
+                        .withValueMap(new ValueMap()
+                                .withNumber(":i", currAddrInx));
+                table.updateItem(updateItemSpec);
             }
         }
         catch (Exception e) {

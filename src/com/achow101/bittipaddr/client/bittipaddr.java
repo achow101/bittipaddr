@@ -52,19 +52,18 @@ public class bittipaddr implements EntryPoint {
                 }
 
                 // Send to server
-                AddrReq req;
-                if(!xpub.isEmpty())
+                AddrReq req = new AddrReq();
+                if(!unit.isEmpty())
+                {
+                    req.setId(unit);
+                }
+                else if(!xpub.isEmpty())
                 {
                     req = new AddrReq(xpub);
                 }
                 else if(addrs.length != 0)
                 {
                     req = new AddrReq(addrs);
-                }
-                else
-                {
-                    req = new AddrReq();
-                    req.setId(unit);
                 }
                 bittipaddrService.App.getInstance().addAddresses(req, new AddAddrAsyncCallback(output));
             }
