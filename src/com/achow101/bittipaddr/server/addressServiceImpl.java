@@ -61,7 +61,7 @@ public class addressServiceImpl extends HttpServlet {
             if(currAddrInx < addresses.size()) {
                 address = addresses.get(currAddrInx);
 
-                while(blockCypherContext.getAddressService().getAddress(address).getnTx() > 0) {
+                while(blockCypherContext.getAddressService().getAddress(address).getnTx() > 0 && currAddrInx < addresses.size()) {
                     // Increment index and get next address
                     currAddrInx++;
                     address = addresses.get(currAddrInx);
@@ -86,12 +86,21 @@ public class addressServiceImpl extends HttpServlet {
             System.out.println("Error in getting item.");
         }
 
-        // Set response content type
-        response.setContentType("text/html");
+        // Send them a redirect to the bitcoin uri if redirect is set
+        if(request.getParameter("redirect") != null)
+        {
+            response.sendRedirect("bitcoin:" + address);
+        }
+        else
+        {
+            // Set response content type
+            response.setContentType("text/html");
 
-        // Actual logic goes here.
-        PrintWriter out = response.getWriter();
-        out.println("<a href=bitcoin:" + address + ">" + address + "</a>");
+            // Actual logic goes here.
+            PrintWriter out = response.getWriter();
+            out.println("<a href=bitcoin:" + address + ">" + address + "</a>");
+
+        }
     }
 
 }

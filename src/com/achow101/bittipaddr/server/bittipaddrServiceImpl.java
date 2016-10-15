@@ -51,7 +51,6 @@ public class bittipaddrServiceImpl extends RemoteServiceServlet implements bitti
             try {
                 Item item = table.getItem("ID", req.getId());
 
-                // TODO: Handle editing
                 // Check the password
                 if(getHash(req.getPassword()).equals(item.getString("passhash")))
                 {
