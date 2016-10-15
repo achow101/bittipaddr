@@ -19,6 +19,7 @@ import com.amazonaws.services.dynamodbv2.document.spec.GetItemSpec;
 import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.blockcypher.context.BlockCypherContext;
+import com.blockcypher.exception.BlockCypherException;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 import javax.servlet.ServletException;
@@ -53,9 +54,10 @@ public class addressServiceImpl extends HttpServlet {
         // Lookup ID and get current address, increment index
         String address = "";
         Table table = dynamoDB.getTable("Bittipaddrs");
+        int currAddrInx = 0;
         try {
             Item item = table.getItem("ID", id);
-            int currAddrInx = item.getInt("AddrIndex");
+            currAddrInx = item.getInt("AddrIndex");
             int origIndx = currAddrInx;
             List<String> addresses = item.getList("Addresses");
             if(currAddrInx < addresses.size()) {
@@ -81,6 +83,16 @@ public class addressServiceImpl extends HttpServlet {
                                 .withNumber(":i", currAddrInx));
                 table.updateItem(updateItemSpec);
             }
+        }
+        // Deal with rate limiting from BlockCypher
+        catch(BlockCypherException e)
+        {
+            UpdateItemSpec updateItemSpec = new UpdateItemSpec()
+                    .withPrimaryKey("ID", id)
+                    .withUpdateExpression("set AddrIndex=:i")
+                    .withValueMap(new ValueMap()
+                            .withNumber(":i", currAddrInx));
+            table.updateItem(updateItemSpec);
         }
         catch (Exception e) {
             System.out.println("Error in getting item.");

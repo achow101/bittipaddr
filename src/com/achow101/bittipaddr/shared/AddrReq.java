@@ -87,10 +87,10 @@ public class AddrReq implements IsSerializable {
     public String getHtml() {
         String out = "<table><tr></tr><tr><td>Your Unit ID is <b>" + this.id + "</b></td></tr>\n" +
                 "<tr><td>Your password for editing these details (KEEP SAFE): </td><td>" + password + "</td></tr>" +
-                "\n<tr></tr><tr><td>Embed this into your website: </td><td>" +
-                "<code>&lt;iframe src=\"http://localhost:8888/bittipaddr/addressfor/" + this.id + "\" style=\"border:none;\" scrolling=\"no\"&gt;&lt;/iframe&gt;</code></td></tr>\n"/* +
-                "\n<tr><td>Use this for BBCode (Forums): </td><td>STUFF</td></tr>\n" +
-                "\n<tr><td>Use this for Markdown (Reddit, Github): </td><td>STUFF</td></tr>\n"*/;
+                "\n<tr></tr><tr><td>Embed this into your website and for Markdown (GitHub): </td><td>" +
+                "<code>&lt;iframe src=\"http://localhost:8888/bittipaddr/addressfor/" + this.id + "\" style=\"border:none;\" scrolling=\"no\"&gt;&lt;/iframe&gt;</code></td></tr>\n" +
+                "\n<tr><td>Use this for BBCode (Forums): </td><td><code>[url=https://localhost:8888/bittipaddr/addressfor/" + this.id + "?redirect]Tip Me![/url]</code></td></tr>\n" +
+                "\n<tr><td>Use this for Reddit: </td><td><code>[Tip Me!](https://localhost:8888/bittipaddr/addressfor/" + this.id + "?redirect)</code></td></tr>\n";
         if(!xpub.equals("NONE"))
         {
             out += "<tr><td>This is your Extended Public Key:</td><td>" + xpub + "</td></tr>";
