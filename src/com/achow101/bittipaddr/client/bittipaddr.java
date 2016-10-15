@@ -26,6 +26,7 @@ public class bittipaddr implements EntryPoint {
 
         // Add textboxes
         TextBox unitLookupBox = new TextBox();
+        TextBox unitPassBox = new TextBox();
         TextBox xpubBox = new TextBox();
         xpubBox.setWidth("600");
         TextArea addrsArea = new TextArea();
@@ -43,6 +44,7 @@ public class bittipaddr implements EntryPoint {
 
                 // Get entered data and some prelim checking
                 String xpub = xpubBox.getText();
+                String pass = unitPassBox.getText();
                 String unit = unitLookupBox.getText();
                 String[] addrs = addrsArea.getText().split("\n");
                 if(!xpub.isEmpty() && !addrs[0].isEmpty())
@@ -56,6 +58,7 @@ public class bittipaddr implements EntryPoint {
                 if(!unit.isEmpty())
                 {
                     req.setId(unit);
+                    req.setPassword(pass);
                 }
                 else if(!xpub.isEmpty())
                 {
@@ -72,6 +75,7 @@ public class bittipaddr implements EntryPoint {
         // Add to html
         RootPanel.get("submitBtn").add(submitBtn);
         RootPanel.get("unitLookup").add(unitLookupBox);
+        RootPanel.get("unitPass").add(unitPassBox);
         RootPanel.get("enterxpub").add(xpubBox);
         RootPanel.get("enterAddrList").add(addrsArea);
         RootPanel.get("completedReqOutput").add(output);

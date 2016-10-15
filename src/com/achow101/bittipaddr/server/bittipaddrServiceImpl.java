@@ -23,7 +23,10 @@ import org.bitcoinj.crypto.HDKeyDerivation;
 import org.bitcoinj.params.MainNetParams;
 import org.bitcoinj.wallet.UnreadableWalletException;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Arrays;
 
@@ -44,11 +47,19 @@ public class bittipaddrServiceImpl extends RemoteServiceServlet implements bitti
         {
             try {
                 Item item = table.getItem("ID", req.getId());
-                String[] addresses = new String[item.getList("Addresses").size()];
-                item.getList("Addresses").toArray(addresses);
-                req.setAddresses(addresses);
-                req.setXpub(item.getString("bip32-xpub"));
-                return req.getHtml();
+
+                // Check the password
+                if(getHash(req.getPassword()).equals(item.getString("passhash")))
+                {
+                    String[] addresses = new String[item.getList("Addresses").size()];
+                    item.getList("Addresses").toArray(addresses);
+                    req.setAddresses(addresses);
+                    req.setXpub(item.getString("bip32-xpub"));
+                    return req.getHtml();
+                }
+                else
+                    return "<p style=\"color:red;\">Incorrect password</p>";
+
             }
             catch(Exception e) {
                 return "<p style=\"color:red;\">Could not find unit</p>";
@@ -89,16 +100,32 @@ public class bittipaddrServiceImpl extends RemoteServiceServlet implements bitti
             }
         }
 
-        // Set the request ID
+        // Set the request ID and unique password
         req.setId(new BigInteger(40, random).toString(32));
+        req.setPassword(new BigInteger(256, random).toString(32));
 
         // Add request to DynamoDB
-        Item item = new Item().withPrimaryKey("ID", req.getId())
-                .withInt("AddrIndex", 0)
-                .withList("Addresses", Arrays.asList(req.getAddresses()))
-                .withString("bip32-xpub", req.getXpub());
+        Item item = null;
+        try {
+            item = new Item().withPrimaryKey("ID", req.getId())
+                    .withInt("AddrIndex", 0)
+                    .withList("Addresses", Arrays.asList(req.getAddresses()))
+                    .withString("bip32-xpub", req.getXpub())
+                    .withString("passhash", getHash(req.getPassword()));
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         table.putItem(item);
 
         return req.getHtml();
+    }
+
+    private String getHash(String pass) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        md.update(pass.getBytes("UTF-8"));
+        byte[] digest = md.digest();
+        return String.format("%064x", new java.math.BigInteger(1, digest));
     }
 }

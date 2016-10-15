@@ -13,6 +13,7 @@ public class AddrReq implements IsSerializable {
     private String xpub;
     private String[] addresses;
     private String id;
+    private String password;
 
     public AddrReq(String xpub) {
         this.xpub = xpub;
@@ -56,13 +57,23 @@ public class AddrReq implements IsSerializable {
         this.id = id;
     }
 
+    public String getPassword()
+    {
+        return password;
+    }
+
+    public void setPassword(String password)
+    {
+        this.password = password;
+    }
+
     public String getHtml() {
-        // TODO: Fix HTML
         String out = "<table><tr></tr><tr><td>Your Unit ID is <b>" + this.id + "</b></td></tr>\n" +
+                "<tr><td>Your password for editing these details (KEEP SAFE): </td><td>" + password + "</td></tr>" +
                 "\n<tr></tr><tr><td>Embed this into your website: </td><td>" +
-                "<code>&lt;iframe src=\"http://localhost:8888/bittipaddr/addressfor/" + this.id + "\" style=\"border:none;\" scrolling=\"no\"&gt;&lt;/iframe&gt;</code></td></tr>\n" +
+                "<code>&lt;iframe src=\"http://localhost:8888/bittipaddr/addressfor/" + this.id + "\" style=\"border:none;\" scrolling=\"no\"&gt;&lt;/iframe&gt;</code></td></tr>\n"/* +
                 "\n<tr><td>Use this for BBCode (Forums): </td><td>STUFF</td></tr>\n" +
-                "\n<tr><td>Use this for Markdown (Reddit, Github): </td><td>STUFF</td></tr>\n";
+                "\n<tr><td>Use this for Markdown (Reddit, Github): </td><td>STUFF</td></tr>\n"*/;
         if(!xpub.equals("NONE"))
         {
             out += "<tr><td>This is your Extended Public Key:</td><td>" + xpub + "</td></tr>";
