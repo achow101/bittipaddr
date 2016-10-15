@@ -10,25 +10,22 @@ import java.util.Random;
  */
 public class AddrReq implements IsSerializable {
 
-    private String xpub;
-    private String[] addresses;
-    private String id;
+    private String xpub = "NONE";
+    private String[] addresses = new String[0];
+    private String id = "NEW";
     private String password;
+    private boolean edit = false;
+    private boolean edited = false;
 
     public AddrReq(String xpub) {
         this.xpub = xpub;
-        this.addresses = new String[0];
-        this.id = "NEW";
     }
 
     public AddrReq(String[] addresses) {
-        this.xpub = "NONE";
         this.addresses = addresses;
-        this.id = "NEW";
     }
 
     public AddrReq() {
-        this(new String[0]);
     }
 
     public String getXpub() {
@@ -67,6 +64,26 @@ public class AddrReq implements IsSerializable {
         this.password = password;
     }
 
+    public void setEditable(boolean edit)
+    {
+        this.edit = edit;
+    }
+
+    public boolean isEditable()
+    {
+        return edit;
+    }
+
+    public void setEdited()
+    {
+        this.edited = true;
+    }
+
+    public boolean isEdited()
+    {
+        return edited;
+    }
+
     public String getHtml() {
         String out = "<table><tr></tr><tr><td>Your Unit ID is <b>" + this.id + "</b></td></tr>\n" +
                 "<tr><td>Your password for editing these details (KEEP SAFE): </td><td>" + password + "</td></tr>" +
@@ -84,6 +101,16 @@ public class AddrReq implements IsSerializable {
             out += "<tr><td>" + addresses[i] + "</td></tr>\n";
         }
         out += "</table>";
+        return out;
+    }
+
+    public String getPlain()
+    {
+        String out = "PLAIN\n" + xpub + "\n";
+        for(int i = 0; i < addresses.length; i++)
+        {
+            out += addresses[i] + "\n";
+        }
         return out;
     }
 

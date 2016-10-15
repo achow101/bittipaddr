@@ -13,11 +13,15 @@ import com.google.gwt.user.client.ui.*;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.TextArea;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>
  */
 public class bittipaddr implements EntryPoint {
+
+    private boolean edited = false;
 
     /**
      * This is the entry point method.
@@ -33,6 +37,10 @@ public class bittipaddr implements EntryPoint {
         addrsArea.setWidth("300");
         addrsArea.setHeight("300");
 
+        // Checkbox to enable editing with lookup
+        CheckBox submitEdit = new CheckBox("Submit changes after clicking button");
+        CheckBox allowEdit = new CheckBox("Allow editing the unit");
+
         // Add text elements
         HTML output = new HTML();
 
@@ -42,12 +50,15 @@ public class bittipaddr implements EntryPoint {
         submitBtn.addClickHandler(new ClickHandler() {
             public void onClick(ClickEvent event) {
 
+                // Clear previous output
+                output.setHTML("");
+
                 // Get entered data and some prelim checking
                 String xpub = xpubBox.getText();
                 String pass = unitPassBox.getText();
                 String unit = unitLookupBox.getText();
                 String[] addrs = addrsArea.getText().split("\n");
-                if(!xpub.isEmpty() && !addrs[0].isEmpty())
+                if(!xpub.isEmpty() && !addrs[0].isEmpty() && unit.isEmpty() && pass.isEmpty())
                 {
                     output.setHTML("<p style=\"color:red;\">Cannot set both xpub and a list of addresses</p>");
                     return;
@@ -59,6 +70,19 @@ public class bittipaddr implements EntryPoint {
                 {
                     req.setId(unit);
                     req.setPassword(pass);
+                    req.setEditable(allowEdit.getValue());
+                    if(edited)
+                    {
+                        if(xpub.isEmpty())
+                        {
+                            output.setHTML("<p style=\"color:red;\">Must have an xpub. Set as \"NONE\" (without quotes) if no xpub</p>");
+                            return;
+                        }
+
+                        req.setEdited();
+                        req.setAddresses(addrs);
+                        req.setXpub(xpub.isEmpty() ? "NONE" : xpub);
+                    }
                 }
                 else if(!xpub.isEmpty())
                 {
@@ -68,7 +92,7 @@ public class bittipaddr implements EntryPoint {
                 {
                     req = new AddrReq(addrs);
                 }
-                bittipaddrService.App.getInstance().addAddresses(req, new AddAddrAsyncCallback(output));
+                bittipaddrService.App.getInstance().addAddresses(req, new AddAddrAsyncCallback(output, xpubBox, addrsArea));
             }
         });
 
@@ -79,17 +103,33 @@ public class bittipaddr implements EntryPoint {
         RootPanel.get("enterxpub").add(xpubBox);
         RootPanel.get("enterAddrList").add(addrsArea);
         RootPanel.get("completedReqOutput").add(output);
+        RootPanel.get("edit").add(submitEdit);
+        RootPanel.get("allowEdit").add(allowEdit);
     }
 
-    private static class AddAddrAsyncCallback implements AsyncCallback<String> {
+    private class AddAddrAsyncCallback implements AsyncCallback<String> {
         private HTML outhtml;
+        private TextBox xpubBox;
+        private TextArea addrsArea;
 
-        public AddAddrAsyncCallback(HTML outhtml) {
+        public AddAddrAsyncCallback(HTML outhtml, TextBox xpubBox, TextArea addrsArea) {
             this.outhtml = outhtml;
+            this.xpubBox = xpubBox;
+            this.addrsArea = addrsArea;
         }
 
         public void onSuccess(String result) {
-            outhtml.setHTML(result);
+            // Check for editable, will begin with PLAIN keyword
+            if(result.startsWith("PLAIN"))
+            {
+                result = result.substring(result.indexOf("\n") + 1);
+                xpubBox.setText(result.substring(0, result.indexOf("\n")));
+                result = result.substring(result.indexOf("\n") + 1);
+                addrsArea.setText(result);
+                edited = true;
+            }
+            else
+                outhtml.setHTML(result);
         }
 
         public void onFailure(Throwable throwable) {
