@@ -4,7 +4,7 @@ Embed an automatically changing Bitcoin address into any webpage or forum post. 
 
 ## Building
 
-This project uses the Google Web Toolkit. You must use that in order to build this project and deploy it.
+This project uses the Google Web Toolkit, Amazon Web Services DynamoDB, and BlockCypher's API. You must download the necessary libraries in order to build and deploy this project.
 
 ## License
 
