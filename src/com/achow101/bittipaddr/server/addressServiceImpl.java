@@ -67,6 +67,9 @@ public class addressServiceImpl extends HttpServlet {
                     // Increment index and get next address
                     currAddrInx++;
                     address = addresses.get(currAddrInx);
+
+                    // Wait one third of a second to prevent rate limiting
+                    Thread.sleep(334);
                 }
             }
             else {
